@@ -11,48 +11,32 @@ namespace Tsukaba.Models.MongoRepository
 {
     public class PostRepository : IRepository<Post>
     {
-        private readonly IMongoCollection<Post> context;
+        private readonly IMongoCollection<Post> posts;
 
-        public PostRepository(IOptions<Settings> settings)
+        public PostRepository(MongoContext context)
         {
-            context = new MongoContext(settings)
-                .Database
-                .GetCollection<Post>("Posts");
+            posts = context.Database.GetCollection<Post>("Posts");
         }
 
         public async Task<IEnumerable<Post>> GetAll() =>
-            await context.Find(_ => true).ToListAsync();
+            await posts.Find(_ => true).ToListAsync();
 
         public async Task Create(Post item) =>
-            await context.InsertOneAsync(item);
+            await posts.InsertOneAsync(item);
 
         public async Task Delete(int id) =>
-            await context.DeleteOneAsync(
+            await posts.DeleteOneAsync(
                 Builders<Post>.Filter.Eq(p => p.Id, id));
 
         public async Task<Post> Get(int id) =>
-            await context.Find(
+            await posts.Find(
                 Builders<Post>.Filter.Eq(p => p.Id, id))
                 .FirstOrDefaultAsync();
 
         public async Task Update(Post item) =>
-            await context.ReplaceOneAsync(
+            await posts.ReplaceOneAsync(
                 Builders<Post>.Filter.Eq(p => p.Id, item.Id),
                 item);
-
-        public Task Save() => null;
-
-        private bool disposed = false;
- 
-        public virtual void Dispose(bool disposing)
-        {
-            this.disposed = true;
-        }
-    
-        public void Dispose()
-        {
-            Dispose(true);
-        }
 
     }
 }
