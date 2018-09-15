@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Tsukaba.Models.DatabaseModels;
-using Tsukaba.Models.RepositoryModels;
 using Tsukaba.Services.DalServices;
 
 namespace Tsukaba.Models.MongoRepository
