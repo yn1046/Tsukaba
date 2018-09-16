@@ -3,19 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Tsukaba.Models;
 using Tsukaba.Models.DatabaseModels;
+using Tsukaba.Services.DalServices;
 
 namespace Tsukaba.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : Controller
     {
+        private MongoUnitOfWork db;
+
+        public ValuesController(IOptions<Settings> settings) {
+            db = new MongoUnitOfWork(settings);
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<ActionResult<IEnumerable<string>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var topic = new Topic {
+                Id = 1,
+                Title = "sup /b/",
+                Message = "I'm your new namephug",
+                Time = DateTime.Now,
+                BoardId = 1
+            };
+            //await db.Topics.Create(topic);
+            return Json(topic);
         }
 
         // GET api/values/5

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -53,7 +54,13 @@ namespace Tsukaba
             
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            
+            app.UseMvc();
+            // обработка маршрутов, которые не сопоставлены с ресурсам ранее
+            app.Run(async (context) =>
+            {
+                context.Response.ContentType = "text/html";
+                await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
+            });
         }
     }
 }
