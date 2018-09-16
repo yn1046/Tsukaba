@@ -1,15 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-function Hello(props) {
-    return (
-        <h1>
-            Hello, {props.name}!
-        </h1>
-    );
-}
+import App from './containers/app.jsx'
 
 ReactDOM.render(
-    <Hello name="Vasya" />,
+    <App />,
     document.getElementById('content')
 );
