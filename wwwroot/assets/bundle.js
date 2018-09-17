@@ -201,8 +201,7 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
     _this.state = {
-      thread: null,
-      isLoading: true
+      thread: null
     };
     return _this;
   }
@@ -216,10 +215,17 @@ function (_React$Component) {
         return res.json();
       }).then(function (thread) {
         return _this2.setState({
-          thread: thread,
-          isLoading: false
+          thread: thread
         });
       });
+    }
+  }, {
+    key: "getTimeString",
+    value: function getTimeString() {
+      var date = new Date(this.state.thread.time);
+      var isoDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      var timeString = isoDate.toISOString().split(/T|Z|\./).slice(0, 2).join(' ');
+      return timeString;
     }
   }, {
     key: "render",
@@ -228,7 +234,14 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.thread.message));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        style: {
+          fontWeight: 'bold',
+          fontStyle: 'italic'
+        }
+      }, this.getTimeString()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.thread.message), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: './files/' + this.state.thread.imageUrl
+      }));
     }
   }]);
 

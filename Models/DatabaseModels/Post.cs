@@ -1,16 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Tsukaba.Models.DatabaseModels
 {
     public class Post
     {
-        [BsonId]
+        [Key]
         public int Id { get; set; }
 
         [StringLength(100)]
-        public string Topic { get; set; }
+        public string Title { get; set; }
 
         [Required]
         [StringLength(15000)]
@@ -24,6 +25,9 @@ namespace Tsukaba.Models.DatabaseModels
 
         [Required]
         public int TopicId { get; set; }
+
+        [ForeignKey(nameof(TopicId))]
+        public virtual Topic MyTopic { get; set; }
 
     }
 }

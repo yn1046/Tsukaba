@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Tsukaba.Models;
 using Tsukaba.Models.DatabaseModels;
-using Tsukaba.Services.DalServices;
 
 namespace Tsukaba.Controllers
 {
@@ -14,24 +14,14 @@ namespace Tsukaba.Controllers
     [ApiController]
     public class ValuesController : Controller
     {
-        private MongoUnitOfWork db;
-
-        public ValuesController(IOptions<Settings> settings) {
-            db = new MongoUnitOfWork(settings);
-        }
-
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<IEnumerable<string>>> Get()
         {
-            var topic = new Topic {
-                Id = 1,
-                Title = "sup /b/",
-                Message = "I'm your new namephug",
-                Time = DateTime.Now,
-                BoardId = 1
-            };
-            //await db.Topics.Create(topic);
+            Topic topic;
+            using (var db = new ApplicationDbContext()) {
+                topic = await db.Topics.SingleAsync();
+            }
             return Json(topic);
         }
 

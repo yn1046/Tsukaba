@@ -10,5 +10,6 @@
     <PackageReference Include="Microsoft.AspNetCore.App"/>
     <PackageReference Include="React.AspNet" Version="3.4.1"/>
     <PackageReference Include="MongoDB.Driver" Version="2.7.0"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2"/>
   </ItemGroup>
 </Project>
