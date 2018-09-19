@@ -1,0 +1,13 @@
+form-container {
+    align-content: center;
+}
+
+form {
+    margin-left: 500px;
+    width: 450px;
+    display: block;
+}
+
+input {
+    display: block;
+}

@@ -1,38 +1,37 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Thread from './thread/thread.jsx';
+import PostForm from './postForm/postForm.jsx';
 
 export default class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            thread: null
+            threadList: null
         }
     }
 
     componentDidMount() {
-        fetch('/api/Values')
+        fetch('/api/Data')
             .then(res => res.json())
-            .then(thread => this.setState({ thread }));
-    }
-
-    getTimeString() {
-        const date = new Date(this.state.thread.time);
-        const isoDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-        const timeString = isoDate.toISOString().split(/T|Z|\./).slice(0,2).join(' ');
-        return timeString;
+            .then(thread => this.setState({ threadList: [thread] }));
     }
 
     render() {
-        if (!this.state.thread) {
-            return (<h1>lololoading...</h1>);
-        }
-
+        const threadList = this.state.threadList;
+        let threads;
+        if (!threadList) threads = <h1>lololoading...</h1>;
+        else threads = this.state.threadList.map(thread =>
+                <Thread
+                    key={thread.id}
+                    thread={thread}
+                />
+            ); 
+            
         return (
             <div>
-                <h1>{this.state.thread.title}</h1>
-                <p style={{fontWeight: 'bold', fontStyle: 'italic'}}>{this.getTimeString()}</p>
-                <p>{this.state.thread.message}</p>
-                <img src={'./files/'+this.state.thread.imageUrl} />
+                <PostForm />
+                {threads}
             </div>
         );
     }

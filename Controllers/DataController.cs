@@ -12,7 +12,7 @@ namespace Tsukaba.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : Controller
+    public class DataController : Controller
     {
         // GET api/values
         [HttpGet]
@@ -34,8 +34,12 @@ namespace Tsukaba.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Topic topic)
         {
+            using (var db = new ApplicationDbContext()) {
+                await db.AddAsync(topic);
+            }
+            return Ok(topic);
         }
 
         // PUT api/values/5
