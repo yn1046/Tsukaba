@@ -16,7 +16,7 @@ export default function App() {
                 </nav>
                 <Switch>
                     <Route exact={true} path='/' render={Home} />
-                    <Route path='/b' component={Board} />
+                    <Route path='/b' render={(props) => <Board {...props} boardId={1} />} />
                     <Route path='/about' render={About} />
                 </Switch>
             </div>

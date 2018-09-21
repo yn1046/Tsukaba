@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Tsukaba.Models;
 using Tsukaba.Models.DatabaseModels;
+using Tsukaba.Models.TransferModels;
 
 namespace Tsukaba.Controllers
 {
@@ -27,18 +29,19 @@ namespace Tsukaba.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<ActionResult<IEnumerable<string>>> Get(int id)
         {
-            return "value";
+            List<Topic> topics;
+            using (var db = new ApplicationDbContext()) {
+                topics = await db.Topics.Where(t => t.BoardId == id).ToListAsync();
+            }
+            return Json(topics);
         }
 
         // POST api/values
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Topic topic)
+        public async Task<ActionResult> Post([FromForm] TopicTransfer topic)
         {
-            using (var db = new ApplicationDbContext()) {
-                await db.AddAsync(topic);
-            }
             return Ok(topic);
         }
 

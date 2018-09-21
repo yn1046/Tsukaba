@@ -12,9 +12,9 @@ export default class Board extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/Data')
+        fetch(`/api/Data/${this.props.boardId}`)
             .then(res => res.json())
-            .then(thread => this.setState({ threadList: [thread] }));
+            .then(threads => this.setState({ threadList: threads }));
     }
 
     render() {
@@ -30,7 +30,7 @@ export default class Board extends React.Component {
             
         return (
             <div>
-                <PostForm />
+                <PostForm boardId={this.props.boardId} />
                 {threads}
             </div>
         );

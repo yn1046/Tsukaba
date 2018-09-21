@@ -18,8 +18,17 @@ export default class PostForm extends React.Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+
+        let value;
+        if (target.type === 'file') {
+            value = target.files[0];
+        }
+        else {
+            value = target.type === 'checkbox' ?
+                target.checked :
+                target.value;
+        }
 
         this.setState({
             [name]: value
@@ -27,8 +36,17 @@ export default class PostForm extends React.Component {
     }
 
     handleSubmit(event) {
-        alert(`You have submitted:\n${this.state.title}\n${this.state.message}`);
         event.preventDefault();
+        let formData = new FormData();
+        formData.append('title', this.state.title);
+        formData.append('message', this.state.message);
+        formData.append('boardId', this.props.boardId);
+        formData.append('image', this.state.image, this.state.image.file);
+
+        fetch('/api/Data', {
+            method: 'POST',
+            body: formData
+        }).then(res => {if (res) console.log(res)});
     }
 
     render() {
@@ -49,7 +67,6 @@ export default class PostForm extends React.Component {
                         placeholder="Enter message..."
                     />
                     <input
-                        value={this.state.image}
                         onChange={this.handleChange}
                         type="file"
                         name="image"

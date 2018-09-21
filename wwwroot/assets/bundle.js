@@ -126,6 +126,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _home_home_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./home/home.jsx */ "./App/containers/home/home.jsx");
 /* harmony import */ var _board_board_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./board/board.jsx */ "./App/containers/board/board.jsx");
 /* harmony import */ var _about_about_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./about/about.jsx */ "./App/containers/about/about.jsx");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -145,7 +147,11 @@ function App() {
     render: _home_home_jsx__WEBPACK_IMPORTED_MODULE_3__["default"]
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
     path: "/b",
-    component: _board_board_jsx__WEBPACK_IMPORTED_MODULE_4__["default"]
+    render: function render(props) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_board_board_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, props, {
+        boardId: 1
+      }));
+    }
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
     path: "/about",
     render: _about_about_jsx__WEBPACK_IMPORTED_MODULE_5__["default"]
@@ -215,11 +221,11 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch('/api/Data').then(function (res) {
+      fetch("/api/Data/".concat(this.props.boardId)).then(function (res) {
         return res.json();
-      }).then(function (thread) {
+      }).then(function (threads) {
         return _this2.setState({
-          threadList: [thread]
+          threadList: threads
         });
       });
     }
@@ -234,7 +240,9 @@ function (_React$Component) {
           thread: thread
         });
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null), threads);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        boardId: this.props.boardId
+      }), threads);
     }
   }]);
 
@@ -340,15 +348,32 @@ function (_React$Component) {
     key: "handleChange",
     value: function handleChange(event) {
       var target = event.target;
-      var value = target.type === 'checkbox' ? target.checked : target.value;
       var name = target.name;
+      var value;
+
+      if (target.type === 'file') {
+        value = target.files[0];
+      } else {
+        value = target.type === 'checkbox' ? target.checked : target.value;
+      }
+
       this.setState(_defineProperty({}, name, value));
     }
   }, {
     key: "handleSubmit",
     value: function handleSubmit(event) {
-      alert("You have submitted:\n".concat(this.state.title, "\n").concat(this.state.message));
       event.preventDefault();
+      var formData = new FormData();
+      formData.append('title', this.state.title);
+      formData.append('message', this.state.message);
+      formData.append('boardId', this.props.boardId);
+      formData.append('image', this.state.image, this.state.image.file);
+      fetch('/api/Data', {
+        method: 'POST',
+        body: formData
+      }).then(function (res) {
+        if (res) console.log(res);
+      });
     }
   }, {
     key: "render",
@@ -369,7 +394,6 @@ function (_React$Component) {
         rows: "5",
         placeholder: "Enter message..."
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        value: this.state.image,
         onChange: this.handleChange,
         type: "file",
         name: "image"
