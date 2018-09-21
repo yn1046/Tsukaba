@@ -10,7 +10,5 @@
     <PackageReference Include="Microsoft.AspNetCore.App"/>
     <PackageReference Include="React.AspNet" Version="3.4.1"/>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2"/>
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005"/>
-    <PackageReference Include="SixLabors.ImageSharp.Web" Version="1.0.0-beta0003"/>
   </ItemGroup>
 </Project>

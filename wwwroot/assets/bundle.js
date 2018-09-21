@@ -337,7 +337,7 @@ function (_React$Component) {
     _this.state = {
       title: '',
       message: '',
-      image: ''
+      images: []
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -352,7 +352,12 @@ function (_React$Component) {
       var value;
 
       if (target.type === 'file') {
-        value = target.files[0];
+        value = Array.from(target.files);
+
+        if (value.length > 4) {
+          value = value.slice(0, 4);
+          alert('More than 4 files. Selecting first 4.');
+        }
       } else {
         value = target.type === 'checkbox' ? target.checked : target.value;
       }
@@ -367,7 +372,9 @@ function (_React$Component) {
       formData.append('title', this.state.title);
       formData.append('message', this.state.message);
       formData.append('boardId', this.props.boardId);
-      formData.append('image', this.state.image, this.state.image.file);
+      this.state.images.forEach(function (image) {
+        return formData.append('images', image);
+      });
       fetch('/api/Data', {
         method: 'POST',
         body: formData
@@ -396,7 +403,8 @@ function (_React$Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: this.handleChange,
         type: "file",
-        name: "image"
+        multiple: true,
+        name: "images"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "submit",
         value: "Send"

@@ -42,7 +42,7 @@ namespace Tsukaba.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] TopicTransfer topic)
         {
-            return Ok(topic);
+            return Ok(topic.Message + "\nFiles: "+ topic.Images.Count);
         }
 
         // PUT api/values/5

@@ -9,7 +9,7 @@ export default class PostForm extends React.Component {
         this.state = {
             title: '',
             message: '',
-            image: ''
+            images: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -22,7 +22,11 @@ export default class PostForm extends React.Component {
 
         let value;
         if (target.type === 'file') {
-            value = target.files[0];
+            value = Array.from(target.files);
+            if (value.length > 4) {
+                value = value.slice(0, 4);
+                alert('More than 4 files. Selecting first 4.');
+            }
         }
         else {
             value = target.type === 'checkbox' ?
@@ -41,7 +45,7 @@ export default class PostForm extends React.Component {
         formData.append('title', this.state.title);
         formData.append('message', this.state.message);
         formData.append('boardId', this.props.boardId);
-        formData.append('image', this.state.image, this.state.image.file);
+        this.state.images.forEach(image => formData.append('images', image));
 
         fetch('/api/Data', {
             method: 'POST',
@@ -68,8 +72,8 @@ export default class PostForm extends React.Component {
                     />
                     <input
                         onChange={this.handleChange}
-                        type="file"
-                        name="image"
+                        type="file" multiple
+                        name="images"
                     />
                     <input type="submit" value="Send" />
                 </form>

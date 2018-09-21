@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SixLabors.ImageSharp.Web.DependencyInjection;
 
 namespace Tsukaba
 {
@@ -29,7 +28,6 @@ namespace Tsukaba
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddImageSharp();
             return services.BuildServiceProvider();
         }
 
