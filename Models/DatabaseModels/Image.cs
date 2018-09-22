@@ -5,28 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tsukaba.Models.DatabaseModels
 {
-    public class Topic
+    public class Image
     {
         [Key]
         public int Id { get; set; }
 
-        [StringLength(100)]
-        public string Title { get; set; }
-
         [Required]
-        [StringLength(15000)]
-        public string Message { get; set; }
-
         [StringLength(250)]
         public string ImageUrl { get; set; }
 
         [Required]
-        public DateTime Time { get; set; }
+        public int PostId { get; set; }
 
-        [Required]
-        public int BoardId { get; set; }
-
-        [ForeignKey(nameof(BoardId))]
-        public virtual Board MyBoard { get; set; }
+        [ForeignKey(nameof(PostId))]
+        public Post MyPost { get; set; }
     }
 }

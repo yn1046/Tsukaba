@@ -8,8 +8,8 @@ namespace Tsukaba.Models
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Board> Boards { get; set; }
-        public DbSet<Topic> Topics { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public ApplicationDbContext()
         {
@@ -24,16 +24,23 @@ namespace Tsukaba.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Board>().HasData(new Board { Id = 1, Title = "/b/", FullTitle = "Бардак" });
-            modelBuilder.Entity<Topic>().HasData(
-                new Topic
+            modelBuilder.Entity<Post>().HasData(
+                new Post
                 {
                     Id = 1,
                     Title = "Тохо-тред",
                     Message = @" Как минимум 74,67% девочек в Генсокё - украинки
                     На тох посмотришь, так они там все украинки.",
-                    ImageUrl = "Baka.jpg",
                     Time = DateTime.Now,
                     BoardId = 1
+                }
+            );
+            modelBuilder.Entity<Image>().HasData(
+                new Image
+                {
+                    Id = 1,
+                    ImageUrl = "Baka.jpg",
+                    PostId = 1
                 }
             );
         }

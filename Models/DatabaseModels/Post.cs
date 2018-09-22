@@ -9,6 +9,9 @@ namespace Tsukaba.Models.DatabaseModels
         [Key]
         public int Id { get; set; }
 
+        [Required]
+        public int NumberOnBoard { get; set; }
+
         [StringLength(100)]
         public string Title { get; set; }
 
@@ -16,17 +19,35 @@ namespace Tsukaba.Models.DatabaseModels
         [StringLength(15000)]
         public string Message { get; set; }
 
-        [StringLength(250)]
-        public string ImageUrl { get; set; }
-
         [Required]
         public DateTime Time { get; set; }
 
         [Required]
-        public int TopicId { get; set; }
+        public DateTime LastTimeBumped { get; set; }
 
-        [ForeignKey(nameof(TopicId))]
-        public virtual Topic MyTopic { get; set; }
+        [Required]
+        public bool IsSage { get; set; } = false;
+
+        [Required]
+        public bool IsOp { get; set; } = false;
+
+        [Required]
+        public bool IsPinned { get; set; } = false;
+
+        [Required]
+        public bool IsLocked { get; set; } = false;
+
+        [Required]
+        public int ParentId { get; set; } = 0;
+
+        [Required]
+        public int BoardId { get; set; }
+
+        [ForeignKey(nameof(ParentId))]
+        public virtual Post ParentPost { get; set; }
+
+        [ForeignKey(nameof(BoardId))]
+        public virtual Board MyBoard { get; set; }
 
     }
 }

@@ -20,9 +20,9 @@ namespace Tsukaba.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<string>>> Get()
         {
-            Topic topic;
+            Post topic;
             using (var db = new ApplicationDbContext()) {
-                topic = await db.Topics.SingleAsync();
+                topic = await db.Posts.SingleAsync();
             }
             return Json(topic);
         }
@@ -31,18 +31,30 @@ namespace Tsukaba.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<string>>> Get(int id)
         {
-            List<Topic> topics;
+            List<Post> topics;
             using (var db = new ApplicationDbContext()) {
-                topics = await db.Topics.Where(t => t.BoardId == id).ToListAsync();
+                topics = await db.Posts.Where(t => t.BoardId == id).ToListAsync();
             }
             return Json(topics);
         }
 
         // POST api/values
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] TopicTransfer topic)
+        public async Task<ActionResult> Post([FromForm] TopicTransfer fetchedTopic)
         {
-            return Ok(topic.Message + "\nFiles: "+ topic.Images.Count);
+            using (var db = new ApplicationDbContext()) {
+                var topic = new Post {
+                    NumberOnBoard = db.Posts.Where(p => 
+                        p.BoardId == fetchedTopic.BoardId).Count() + 1,
+                    Title = fetchedTopic.Title,
+                    Message = fetchedTopic.Message,
+                    BoardId = fetchedTopic.BoardId,
+                    Time = DateTime.Now,
+                    LastTimeBumped = DateTime.Now
+                };
+                await db.Posts.AddAsync(topic);
+            }
+            return Ok(fetchedTopic.Message + "\nFiles: "+ fetchedTopic.Images.Count);
         }
 
         // PUT api/values/5
