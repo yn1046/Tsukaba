@@ -12,7 +12,7 @@ export default class Board extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/api/Data/${this.props.boardId}`)
+        fetch(`/api/Board/${this.props.boardId}`)
             .then(res => res.json())
             .then(threads => this.setState({ threadList: threads }));
     }
@@ -23,7 +23,7 @@ export default class Board extends React.Component {
         if (!threadList) threads = <h1>lololoading...</h1>;
         else threads = this.state.threadList.map(thread =>
                 <Thread
-                    key={thread.id}
+                    key={thread.numberOnBoard}
                     thread={thread}
                 />
             ); 

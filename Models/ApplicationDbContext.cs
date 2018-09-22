@@ -28,10 +28,22 @@ namespace Tsukaba.Models
                 new Post
                 {
                     Id = 1,
+                    NumberOnBoard = 1,
                     Title = "Тохо-тред",
                     Message = @" Как минимум 74,67% девочек в Генсокё - украинки
                     На тох посмотришь, так они там все украинки.",
                     Time = DateTime.Now,
+                    LastTimeBumped = DateTime.Now,
+                    BoardId = 1
+                },
+                new Post
+                {
+                    Id = 2,
+                    NumberOnBoard = 2,
+                    Title = "Представь ситуацию",
+                    Message = "Идёшь домой по тёмному переулку и видишь пикрилейтед. Твои действия?",
+                    Time = DateTime.Now.AddMinutes(5),
+                    LastTimeBumped = DateTime.Now.AddMinutes(5),
                     BoardId = 1
                 }
             );
@@ -41,6 +53,12 @@ namespace Tsukaba.Models
                     Id = 1,
                     ImageUrl = "Baka.jpg",
                     PostId = 1
+                },
+                new Image
+                {
+                    Id = 2,
+                    ImageUrl = "Cirno.gif",
+                    PostId = 2
                 }
             );
         }

@@ -14,31 +14,21 @@ namespace Tsukaba.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DataController : Controller
+    public class BoardController : Controller
     {
-        // GET api/values
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
-        {
-            Post topic;
-            using (var db = new ApplicationDbContext()) {
-                topic = await db.Posts.SingleAsync();
-            }
-            return Json(topic);
-        }
-
-        // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<string>>> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
             List<Post> topics;
             using (var db = new ApplicationDbContext()) {
-                topics = await db.Posts.Where(t => t.BoardId == id).ToListAsync();
+                topics = await db.Posts
+                    .Where(t => t.BoardId == id && t.ParentId == 0)
+                    .OrderByDescending(t => t.LastTimeBumped)
+                    .ToListAsync();
             }
             return Json(topics);
         }
-
-        // POST api/values
+        
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] TopicTransfer fetchedTopic)
         {
@@ -57,13 +47,11 @@ namespace Tsukaba.Controllers
             return Ok(fetchedTopic.Message + "\nFiles: "+ fetchedTopic.Images.Count);
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

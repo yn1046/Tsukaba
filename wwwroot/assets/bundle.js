@@ -221,7 +221,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch("/api/Data/".concat(this.props.boardId)).then(function (res) {
+      fetch("/api/Board/".concat(this.props.boardId)).then(function (res) {
         return res.json();
       }).then(function (threads) {
         return _this2.setState({
@@ -236,7 +236,7 @@ function (_React$Component) {
       var threads;
       if (!threadList) threads = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else threads = this.state.threadList.map(function (thread) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-          key: thread.id,
+          key: thread.numberOnBoard,
           thread: thread
         });
       });
@@ -433,26 +433,89 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
  // TODO: remake into single thread, fetch and map in board.jsx
 
-function Thread(props) {
-  function getTimeString(threadTime) {
-    var date = new Date(threadTime);
-    var isoDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    var timeString = isoDate.toISOString().split(/T|Z|\./).slice(0, 2).join(' ');
-    return timeString;
+var Thread =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Thread, _React$Component);
+
+  function Thread(props) {
+    var _this;
+
+    _classCallCheck(this, Thread);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Thread).call(this, props));
+    _this.state = {
+      images: null
+    };
+    return _this;
   }
 
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, props.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-    style: {
-      fontWeight: 'bold',
-      fontStyle: 'italic'
+  _createClass(Thread, [{
+    key: "getTimeString",
+    value: function getTimeString() {
+      var date = new Date(this.props.thread.time);
+      var isoDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      var timeString = isoDate.toISOString().split(/T|Z|\./).slice(0, 2).join(' ');
+      return timeString;
     }
-  }, getTimeString(props.thread.time)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, props.thread.message), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-    src: './files/' + props.thread.imageUrl
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
-}
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var thread = this.props.thread;
+      fetch("/api/Images/".concat(thread.boardId, "/").concat(thread.numberOnBoard)).then(function (res) {
+        return res.json();
+      }).then(function (images) {
+        return _this2.setState({
+          images: images
+        });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var images;
+      if (!this.state.images) images = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("em", null, "loading images...");else images = this.state.images.map(function (i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+          key: i.imageUrl,
+          src: './files/' + i.imageUrl
+        });
+      });
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", this.props.thread.numberOnBoard), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+        style: {
+          fontWeight: 'bold',
+          fontStyle: 'italic'
+        }
+      }, this.getTimeString()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.thread.message), images, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
+    }
+  }]);
+
+  return Thread;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+
 
 /***/ }),
 

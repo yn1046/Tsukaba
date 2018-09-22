@@ -43,9 +43,6 @@ namespace Tsukaba.Models.DatabaseModels
         [Required]
         public int BoardId { get; set; }
 
-        [ForeignKey(nameof(ParentId))]
-        public virtual Post ParentPost { get; set; }
-
         [ForeignKey(nameof(BoardId))]
         public virtual Board MyBoard { get; set; }
 
