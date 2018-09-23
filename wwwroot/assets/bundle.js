@@ -375,7 +375,7 @@ function (_React$Component) {
       this.state.images.forEach(function (image) {
         return formData.append('images', image);
       });
-      fetch('/api/Data', {
+      fetch('/api/Board', {
         method: 'POST',
         body: formData
       }).then(function (res) {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +18,19 @@ namespace Tsukaba.Controllers
     [ApiController]
     public class BoardController : Controller
     {
+        IHostingEnvironment _appEnvironment;
+
+        public BoardController(IHostingEnvironment appEnvironment)
+        {
+            _appEnvironment = appEnvironment;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
             List<Post> topics;
-            using (var db = new ApplicationDbContext()) {
+            using (var db = new ApplicationDbContext())
+            {
                 topics = await db.Posts
                     .Where(t => t.BoardId == id && t.ParentId == 0)
                     .OrderByDescending(t => t.LastTimeBumped)
@@ -28,14 +38,17 @@ namespace Tsukaba.Controllers
             }
             return Json(topics);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] TopicTransfer fetchedTopic)
         {
-            using (var db = new ApplicationDbContext()) {
-                var topic = new Post {
-                    NumberOnBoard = db.Posts.Where(p => 
-                        p.BoardId == fetchedTopic.BoardId).Count() + 1,
+            using (var db = new ApplicationDbContext())
+            {
+                var topic = new Post
+                {
+                    Id = (db.Posts.Count() + 1),
+                    NumberOnBoard = (db.Posts.Where(p =>
+                        p.BoardId == fetchedTopic.BoardId).Count() + 1),
                     Title = fetchedTopic.Title,
                     Message = fetchedTopic.Message,
                     BoardId = fetchedTopic.BoardId,
@@ -43,8 +56,29 @@ namespace Tsukaba.Controllers
                     LastTimeBumped = DateTime.Now
                 };
                 await db.Posts.AddAsync(topic);
+
+                if (fetchedTopic.Images != null)
+                {
+                    foreach (var image in fetchedTopic.Images)
+                    {
+                        // путь к папке Files
+                        var path = "/Files/" + image.FileName;
+                        // сохраняем файл в папку Files в каталоге wwwroot
+                        using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                        {
+                            await image.CopyToAsync(fileStream);
+                        }
+                        await db.Images.AddAsync(new Image {
+                            Id = (db.Images.Count() + 1),
+                            ImageUrl = path,
+                            PostId = topic.Id
+                        });
+                    }
+                }
+
+                await db.SaveChangesAsync();
             }
-            return Ok(fetchedTopic.Message + "\nFiles: "+ fetchedTopic.Images.Count);
+            return Ok(fetchedTopic.Message + "\nFiles: " + fetchedTopic.Images.Count);
         }
 
         [HttpPut("{id}")]
