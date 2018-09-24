@@ -18,13 +18,6 @@ namespace Tsukaba.Controllers
     [ApiController]
     public class BoardController : Controller
     {
-        IHostingEnvironment _appEnvironment;
-
-        public BoardController(IHostingEnvironment appEnvironment)
-        {
-            _appEnvironment = appEnvironment;
-        }
-
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -61,10 +54,11 @@ namespace Tsukaba.Controllers
                 {
                     foreach (var image in fetchedTopic.Images)
                     {
-                        // путь к папке Files
-                        var path = "/Files/" + image.FileName;
+                        var timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                        var path = "/Files/" + timestamp
+                            + image.FileName.Substring(image.FileName.LastIndexOf('.'));
                         // сохраняем файл в папку Files в каталоге wwwroot
-                        using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                        using (var fileStream = new FileStream(Directory.GetCurrentDirectory() + path, FileMode.Create))
                         {
                             await image.CopyToAsync(fileStream);
                         }

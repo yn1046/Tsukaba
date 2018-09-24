@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +20,6 @@ namespace Tsukaba.Controllers
         [HttpGet("{boardId}/{postId}")]
         public async Task<ActionResult> GetImages(int boardId, int postId)
         {
-            List<Image> images;
             using (var db = new ApplicationDbContext())
             {
                 if (!db.Posts.Any(p => p.BoardId == boardId
@@ -33,12 +33,19 @@ namespace Tsukaba.Controllers
                     return NoContent();
 
 
-                images = await db.Images
+                var imagePaths = await db.Images
                     .Where(i => i.PostId == post.Id)
+                    .Select(i => i.ImageUrl)
                     .ToListAsync();
-            }
 
-            return Json(images);
+                var result = new List<string>();
+                foreach (var path in imagePaths) {
+                    var file = System.IO.File.ReadAllBytes(path.Substring(1));
+                    result.Add("data:image/*;base64,"+Convert.ToBase64String(file));
+                }
+
+                return Json(result);
+            }
         }
     }
 }

@@ -27,14 +27,17 @@ export default class Thread extends React.Component {
     render() {
         let images;
         if (!this.state.images) images = <em>loading images...</em>
-        else images = this.state.images.map(i => <img key={i.imageUrl} src={'./files/'+i.imageUrl}></img>);
+        else images = this.state.images.map((i, j) => {
+            console.log(i);
+            return (<img key={j} src={i}></img>);
+        });
         
         return (
             <div>
                 <h1>{this.props.thread.title}</h1>
                 <h3>№{this.props.thread.numberOnBoard}</h3>
                 <p style={{ fontWeight: 'bold', fontStyle: 'italic' }}>{this.getTimeString()}</p>
-                <p>{this.props.thread.message}</p>
+                <pre>{this.props.thread.message}</pre>
                 {images}
                 <hr />
             </div>

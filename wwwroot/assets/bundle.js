@@ -497,10 +497,11 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var images;
-      if (!this.state.images) images = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("em", null, "loading images...");else images = this.state.images.map(function (i) {
+      if (!this.state.images) images = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("em", null, "loading images...");else images = this.state.images.map(function (i, j) {
+        console.log(i);
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-          key: i.imageUrl,
-          src: './files/' + i.imageUrl
+          key: j,
+          src: i
         });
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", this.props.thread.numberOnBoard), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
@@ -508,7 +509,7 @@ function (_React$Component) {
           fontWeight: 'bold',
           fontStyle: 'italic'
         }
-      }, this.getTimeString()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.thread.message), images, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
+      }, this.getTimeString()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, this.props.thread.message), images, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
     }
   }]);
 
