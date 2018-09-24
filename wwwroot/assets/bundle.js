@@ -186,13 +186,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 
 
@@ -211,8 +211,10 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
     _this.state = {
-      threadList: null
+      threadList: null,
+      openThread: null
     };
+    _this.handleOpen = _this.handleOpen.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -230,19 +232,35 @@ function (_React$Component) {
       });
     }
   }, {
+    key: "handleOpen",
+    value: function handleOpen(openThread) {
+      this.setState({
+        openThread: openThread
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var threadList = this.state.threadList;
-      var threads;
-      if (!threadList) threads = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else threads = this.state.threadList.map(function (thread) {
+      var openThread = this.state.openThread;
+      var boardContent;
+      if (!threadList) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else boardContent = this.state.threadList.map(function (thread) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
           key: thread.numberOnBoard,
-          thread: thread
+          thread: thread,
+          only: false,
+          handleOpen: _this3.handleOpen
         });
+      });
+      if (openThread) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        thread: openThread,
+        only: true
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         boardId: this.props.boardId
-      }), threads);
+      }), boardContent);
     }
   }]);
 
@@ -496,6 +514,8 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var images;
       if (!this.state.images) images = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("em", null, "loading images...");else images = this.state.images.map(function (i, j) {
         console.log(i);
@@ -504,7 +524,16 @@ function (_React$Component) {
           src: i
         });
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", this.props.thread.numberOnBoard), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      var open;
+      if (!this.props.open) open = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        style: {
+          display: 'inline-flex'
+        },
+        onClick: function onClick() {
+          return _this3.props.handleOpen(_this3.props.thread);
+        }
+      }, "[Open]");else open = false;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", this.props.thread.numberOnBoard), open, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         style: {
           fontWeight: 'bold',
           fontStyle: 'italic'

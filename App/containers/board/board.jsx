@@ -7,8 +7,11 @@ export default class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            threadList: null
+            threadList: null,
+            openThread: null
         }
+
+        this.handleOpen = this.handleOpen.bind(this);
     }
 
     componentDidMount() {
@@ -17,21 +20,30 @@ export default class Board extends React.Component {
             .then(threads => this.setState({ threadList: threads }));
     }
 
+    handleOpen(openThread) {
+        this.setState({ openThread });
+    }
+
     render() {
         const threadList = this.state.threadList;
-        let threads;
-        if (!threadList) threads = <h1>lololoading...</h1>;
-        else threads = this.state.threadList.map(thread =>
+        const openThread = this.state.openThread;
+        let boardContent;
+        if (!threadList) boardContent = <h1>lololoading...</h1>;
+        else boardContent = this.state.threadList.map(thread =>
                 <Thread
                     key={thread.numberOnBoard}
                     thread={thread}
+                    only={false}
+                    handleOpen={this.handleOpen}
                 />
-            ); 
-            
+            );
+
+        if (openThread) boardContent = <Thread thread={openThread} only={true} />
+
         return (
             <div>
                 <PostForm boardId={this.props.boardId} />
-                {threads}
+                {boardContent}
             </div>
         );
     }
