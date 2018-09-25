@@ -5,7 +5,7 @@ import Home from './home/home.jsx'
 import Board from './board/board.jsx'
 import About from './about/about.jsx'
 
-export default function App() { 
+export default function App() {
     return (
         <Router>
             <div>
@@ -16,7 +16,7 @@ export default function App() {
                 </nav>
                 <Switch>
                     <Route exact={true} path='/' render={Home} />
-                    <Route path='/b' render={(props) => <Board {...props} boardId={1} />} />
+                    <Route path='/b/:id?' render={(params) => <Board {...params} boardId={1} />} />
                     <Route path='/about' render={About} />
                 </Switch>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { NavLink } from 'react-router-dom'
 
 // TODO: remake into single thread, fetch and map in board.jsx
 export default class Thread extends React.Component {
@@ -25,6 +26,7 @@ export default class Thread extends React.Component {
     }
 
     render() {
+        const thread = this.props.thread;
         let images;
         if (!this.state.images) images = <em>loading images...</em>
         else images = this.state.images.map((i, j) => {
@@ -33,20 +35,16 @@ export default class Thread extends React.Component {
         });
         
         let open;
-        if (!this.props.open) open = <a 
-            style={{ display: 'inline-flex' }}
-            onClick={() => this.props.handleOpen(this.props.thread)}>
-                [Open]
-            </a>;
+        if (!this.props.only) open = <NavLink to={`/b/${thread.numberOnBoard}`}>[Open]</NavLink>;
         else open = false;
 
         return (
             <div>
-                <h1>{this.props.thread.title}</h1>
-                <h3>№{this.props.thread.numberOnBoard}</h3>
+                <h1>{thread.title}</h1>
+                <h3>№{thread.numberOnBoard}</h3>
                 {open}
                 <p style={{ fontWeight: 'bold', fontStyle: 'italic' }}>{this.getTimeString()}</p>
-                <pre>{this.props.thread.message}</pre>
+                <pre>{thread.message}</pre>
                 {images}
                 <hr />
             </div>

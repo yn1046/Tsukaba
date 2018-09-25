@@ -146,9 +146,9 @@ function App() {
     path: "/",
     render: _home_home_jsx__WEBPACK_IMPORTED_MODULE_3__["default"]
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-    path: "/b",
-    render: function render(props) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_board_board_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, props, {
+    path: "/b/:id?",
+    render: function render(params) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_board_board_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, params, {
         boardId: 1
       }));
     }
@@ -174,8 +174,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _thread_thread_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./thread/thread.jsx */ "./App/containers/board/thread/thread.jsx");
-/* harmony import */ var _postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./postForm/postForm.jsx */ "./App/containers/board/postForm/postForm.jsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
+/* harmony import */ var _thread_thread_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../thread/thread.jsx */ "./App/containers/thread/thread.jsx");
+/* harmony import */ var _postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../postForm/postForm.jsx */ "./App/containers/postForm/postForm.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -199,6 +200,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 
+
 var Board =
 /*#__PURE__*/
 function (_React$Component) {
@@ -212,9 +214,10 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Board).call(this, props));
     _this.state = {
       threadList: null,
-      openThread: null
+      toThread: false
     };
-    _this.handleOpen = _this.handleOpen.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.AllThreads = _this.AllThreads.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.OpenThread = _this.OpenThread.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -223,7 +226,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch("/api/Board/".concat(this.props.boardId)).then(function (res) {
+      fetch("/api/Board/1").then(function (res) {
         return res.json();
       }).then(function (threads) {
         return _this2.setState({
@@ -232,35 +235,39 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "handleOpen",
-    value: function handleOpen(openThread) {
-      this.setState({
-        openThread: openThread
+    key: "AllThreads",
+    value: function AllThreads() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        boardId: this.props.boardId
+      }), this.state.threadList.map(function (thread) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          key: thread.lastTimeBumped,
+          thread: thread,
+          only: false
+        });
+      }));
+    }
+  }, {
+    key: "OpenThread",
+    value: function OpenThread(id) {
+      console.log(id);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        only: true,
+        thread: this.state.threadList.find(function (t) {
+          return t.numberOnBoard == +id;
+        })
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
-      var threadList = this.state.threadList;
-      var openThread = this.state.openThread;
+      var id = this.props.match.params.id;
+      console.log(this.props.match);
       var boardContent;
-      if (!threadList) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else boardContent = this.state.threadList.map(function (thread) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-          key: thread.numberOnBoard,
-          thread: thread,
-          only: false,
-          handleOpen: _this3.handleOpen
-        });
-      });
-      if (openThread) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_thread_thread_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        thread: openThread,
-        only: true
-      });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        boardId: this.props.boardId
-      }), boardContent);
+      if (!this.state.threadList) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else {
+        if (id) boardContent = this.OpenThread(id);else boardContent = this.AllThreads();
+      }
+      return boardContent;
     }
   }]);
 
@@ -271,15 +278,37 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ "./App/containers/board/postForm/form.css":
-/*!************************************************!*\
-  !*** ./App/containers/board/postForm/form.css ***!
-  \************************************************/
+/***/ "./App/containers/home/home.jsx":
+/*!**************************************!*\
+  !*** ./App/containers/home/home.jsx ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Home; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function Home(props) {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("article", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Welcome. Again."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Tsukaba is an anonymous forum where everyone can communicate freely. It has no rules nor registration."));
+}
+
+/***/ }),
+
+/***/ "./App/containers/postForm/form.css":
+/*!******************************************!*\
+  !*** ./App/containers/postForm/form.css ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader!./form.css */ "./node_modules/css-loader/index.js!./App/containers/board/postForm/form.css");
+var content = __webpack_require__(/*! !../../../node_modules/css-loader!./form.css */ "./node_modules/css-loader/index.js!./App/containers/postForm/form.css");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -293,7 +322,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -301,10 +330,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./App/containers/board/postForm/postForm.jsx":
-/*!****************************************************!*\
-  !*** ./App/containers/board/postForm/postForm.jsx ***!
-  \****************************************************/
+/***/ "./App/containers/postForm/postForm.jsx":
+/*!**********************************************!*\
+  !*** ./App/containers/postForm/postForm.jsx ***!
+  \**********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -315,7 +344,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _form_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./form.css */ "./App/containers/board/postForm/form.css");
+/* harmony import */ var _form_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./form.css */ "./App/containers/postForm/form.css");
 /* harmony import */ var _form_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_form_css__WEBPACK_IMPORTED_MODULE_2__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -437,10 +466,10 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ "./App/containers/board/thread/thread.jsx":
-/*!************************************************!*\
-  !*** ./App/containers/board/thread/thread.jsx ***!
-  \************************************************/
+/***/ "./App/containers/thread/thread.jsx":
+/*!******************************************!*\
+  !*** ./App/containers/thread/thread.jsx ***!
+  \******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -451,6 +480,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -468,6 +498,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
  // TODO: remake into single thread, fetch and map in board.jsx
@@ -514,8 +545,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
-
+      var thread = this.props.thread;
       var images;
       if (!this.state.images) images = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("em", null, "loading images...");else images = this.state.images.map(function (i, j) {
         console.log(i);
@@ -525,20 +555,15 @@ function (_React$Component) {
         });
       });
       var open;
-      if (!this.props.open) open = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        style: {
-          display: 'inline-flex'
-        },
-        onClick: function onClick() {
-          return _this3.props.handleOpen(_this3.props.thread);
-        }
+      if (!this.props.only) open = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["NavLink"], {
+        to: "/b/".concat(thread.numberOnBoard)
       }, "[Open]");else open = false;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", this.props.thread.numberOnBoard), open, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, thread.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", thread.numberOnBoard), open, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         style: {
           fontWeight: 'bold',
           fontStyle: 'italic'
         }
-      }, this.getTimeString()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, this.props.thread.message), images, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
+      }, this.getTimeString()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("pre", null, thread.message), images, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null));
     }
   }]);
 
@@ -546,28 +571,6 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 
-
-/***/ }),
-
-/***/ "./App/containers/home/home.jsx":
-/*!**************************************!*\
-  !*** ./App/containers/home/home.jsx ***!
-  \**************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Home; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function Home(props) {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("article", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Welcome. Again."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Tsukaba is an anonymous forum where everyone can communicate freely. It has no rules nor registration."));
-}
 
 /***/ }),
 
@@ -592,14 +595,14 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./App/containers/board/postForm/form.css":
-/*!**************************************************************************!*\
-  !*** ./node_modules/css-loader!./App/containers/board/postForm/form.css ***!
-  \**************************************************************************/
+/***/ "./node_modules/css-loader/index.js!./App/containers/postForm/form.css":
+/*!********************************************************************!*\
+  !*** ./node_modules/css-loader!./App/containers/postForm/form.css ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
 // imports
 
 
