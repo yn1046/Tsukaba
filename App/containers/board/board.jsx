@@ -12,8 +12,7 @@ export default class Board extends React.Component {
             toThread: false
         }
 
-        this.AllThreads = this.AllThreads.bind(this);
-        this.OpenThread = this.OpenThread.bind(this);
+        this.allThreads = this.allThreads.bind(this);
     }
 
     componentDidMount() {
@@ -22,7 +21,7 @@ export default class Board extends React.Component {
             .then(threads => this.setState({ threadList: threads }));
     }
 
-    AllThreads() {
+    allThreads() {
         return (
             <div>
                 <PostForm boardId={this.props.boardId} />
@@ -30,30 +29,17 @@ export default class Board extends React.Component {
                     <Post
                         key={thread.lastTimeBumped}
                         post={thread}
-                        only={false}
+                        openable={true}
                     />
                 )}
             </div>
         );
-    }
-
-    OpenThread(id) {
-        console.log(id);
-        return (
-            <Post only={true} post={this.state.threadList.find(t => t.numberOnBoard == +id)} />
-        );
-    }
+    }    
 
     render() {
-        const id = this.props.match.params.id;
-        console.log(this.props.match);
-
         let boardContent;
         if (!this.state.threadList) boardContent = <h1>lololoading...</h1>;
-        else {
-            if (id) boardContent = this.OpenThread(id);
-            else boardContent = this.AllThreads();
-        }
+        else boardContent = this.allThreads();
 
         return (
             boardContent

@@ -22,7 +22,7 @@ export default class Post extends React.Component {
         const post = this.props.post;
         
         let open;
-        if (!this.props.only) open = <NavLink to={`/b/${post.numberOnBoard}`}>[Open]</NavLink>;
+        if (this.props.openable) open = <NavLink to={`/b/res/${post.numberOnBoard}`}>[Open]</NavLink>;
         else open = false;
 
         return (

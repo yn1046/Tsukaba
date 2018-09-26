@@ -125,8 +125,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 /* harmony import */ var _home_home_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./home/home.jsx */ "./App/containers/home/home.jsx");
 /* harmony import */ var _board_board_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./board/board.jsx */ "./App/containers/board/board.jsx");
-/* harmony import */ var _about_about_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./about/about.jsx */ "./App/containers/about/about.jsx");
+/* harmony import */ var _openThread_openThread_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./openThread/openThread.jsx */ "./App/containers/openThread/openThread.jsx");
+/* harmony import */ var _about_about_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./about/about.jsx */ "./App/containers/about/about.jsx");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -146,15 +148,24 @@ function App() {
     path: "/",
     render: _home_home_jsx__WEBPACK_IMPORTED_MODULE_3__["default"]
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-    path: "/b/:id?",
+    exact: true,
+    path: "/b/",
     render: function render(params) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_board_board_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, params, {
         boardId: 1
       }));
     }
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+    exact: true,
+    path: "/b/res/:id",
+    render: function render(params) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_openThread_openThread_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], _extends({}, params, {
+        boardId: 1
+      }));
+    }
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
     path: "/about",
-    render: _about_about_jsx__WEBPACK_IMPORTED_MODULE_5__["default"]
+    render: _about_about_jsx__WEBPACK_IMPORTED_MODULE_6__["default"]
   }))));
 }
 
@@ -216,8 +227,7 @@ function (_React$Component) {
       threadList: null,
       toThread: false
     };
-    _this.AllThreads = _this.AllThreads.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.OpenThread = _this.OpenThread.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.allThreads = _this.allThreads.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -235,38 +245,23 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "AllThreads",
-    value: function AllThreads() {
+    key: "allThreads",
+    value: function allThreads() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
         boardId: this.props.boardId
       }), this.state.threadList.map(function (thread) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_post_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
           key: thread.lastTimeBumped,
           post: thread,
-          only: false
+          openable: true
         });
       }));
     }
   }, {
-    key: "OpenThread",
-    value: function OpenThread(id) {
-      console.log(id);
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_post_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        only: true,
-        post: this.state.threadList.find(function (t) {
-          return t.numberOnBoard == +id;
-        })
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
-      var id = this.props.match.params.id;
-      console.log(this.props.match);
       var boardContent;
-      if (!this.state.threadList) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else {
-        if (id) boardContent = this.OpenThread(id);else boardContent = this.AllThreads();
-      }
+      if (!this.state.threadList) boardContent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else boardContent = this.allThreads();
       return boardContent;
     }
   }]);
@@ -297,6 +292,131 @@ __webpack_require__.r(__webpack_exports__);
 function Home(props) {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("article", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Welcome. Again."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Tsukaba is an anonymous forum where everyone can communicate freely. It has no rules nor registration."));
 }
+
+/***/ }),
+
+/***/ "./App/containers/openThread/openThread.jsx":
+/*!**************************************************!*\
+  !*** ./App/containers/openThread/openThread.jsx ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return OpenThread; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _post_post_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../post/post.jsx */ "./App/containers/post/post.jsx");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+
+
+var OpenThread =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(OpenThread, _React$Component);
+
+  function OpenThread(params) {
+    var _this;
+
+    _classCallCheck(this, OpenThread);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(OpenThread).call(this, params));
+    _this.state = {
+      op: null,
+      postList: null
+    };
+    _this.threadId = +_this.props.match.params.id;
+    _this.fetchOp = _this.fetchOp.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.fetchPosts = _this.fetchPosts.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.mapPosts = _this.mapPosts.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(OpenThread, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.fetchOp();
+      this.fetchPosts();
+    }
+  }, {
+    key: "fetchOp",
+    value: function fetchOp() {
+      var _this2 = this;
+
+      fetch("/api/Topic/".concat(this.props.boardId, "/").concat(this.threadId)).then(function (res) {
+        return res.json();
+      }).then(function (op) {
+        return _this2.setState({
+          op: op
+        });
+      });
+    }
+  }, {
+    key: "fetchPosts",
+    value: function fetchPosts() {
+      var _this3 = this;
+
+      fetch("/api/Posts/".concat(this.props.boardId, "/").concat(this.threadId)).then(function (res) {
+        return res.json();
+      }).then(function (postList) {
+        return _this3.setState({
+          postList: postList
+        });
+      });
+    }
+  }, {
+    key: "mapPosts",
+    value: function mapPosts() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.state.postList.map(function (post) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_post_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          key: post.time,
+          post: post,
+          openable: false
+        });
+      }));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var id = this.threadId;
+      console.log(id);
+      var op;
+      if (!this.state.op) op = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "lololoading...");else op = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_post_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        post: this.state.op,
+        openable: false
+      });
+      var posts;
+      if (!this.state.postList) posts = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "No responses yet.");else posts = this.mapPosts();
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, op, posts);
+    }
+  }]);
+
+  return OpenThread;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+
 
 /***/ }),
 
@@ -457,8 +577,8 @@ function (_React$Component) {
     value: function render() {
       var post = this.props.post;
       var open;
-      if (!this.props.only) open = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["NavLink"], {
-        to: "/b/".concat(post.numberOnBoard)
+      if (this.props.openable) open = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["NavLink"], {
+        to: "/b/res/".concat(post.numberOnBoard)
       }, "[Open]");else open = false;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, post.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "\u2116", post.numberOnBoard), open, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         style: {
