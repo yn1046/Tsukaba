@@ -228,6 +228,7 @@ function (_React$Component) {
       toThread: false
     };
     _this.allThreads = _this.allThreads.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.submitThread = _this.submitThread.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -248,6 +249,7 @@ function (_React$Component) {
     key: "allThreads",
     value: function allThreads() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        submit: this.submitThread,
         boardId: this.props.boardId
       }), this.state.threadList.map(function (thread) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_post_post_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -256,6 +258,19 @@ function (_React$Component) {
           openable: true
         });
       }));
+    }
+  }, {
+    key: "submitThread",
+    value: function submitThread(formData) {
+      if (!formData.get('images')) {
+        alert('Can\'t create a thread without at least one image.');
+        return;
+      }
+
+      fetch('/api/Board', {
+        method: 'POST',
+        body: formData
+      });
     }
   }, {
     key: "render",
@@ -310,6 +325,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _post_post_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../post/post.jsx */ "./App/containers/post/post.jsx");
+/* harmony import */ var _postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../postForm/postForm.jsx */ "./App/containers/postForm/postForm.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -327,6 +343,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 
 
 
@@ -351,6 +368,7 @@ function (_React$Component) {
     _this.fetchOp = _this.fetchOp.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.fetchPosts = _this.fetchPosts.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.mapPosts = _this.mapPosts.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.submitPost = _this.submitPost.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -398,6 +416,15 @@ function (_React$Component) {
       }));
     }
   }, {
+    key: "submitPost",
+    value: function submitPost(formData) {
+      formData.append('parentId', this.threadId);
+      fetch('/api/Posts', {
+        method: 'POST',
+        body: formData
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var id = this.threadId;
@@ -409,7 +436,10 @@ function (_React$Component) {
       });
       var posts;
       if (!this.state.postList) posts = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "No responses yet.");else posts = this.mapPosts();
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, op, posts);
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, op, posts, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_postForm_postForm_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        submit: this.submitPost,
+        boardId: this.props.boardId
+      }));
     }
   }]);
 
@@ -720,12 +750,7 @@ function (_React$Component) {
       this.state.images.forEach(function (image) {
         return formData.append('images', image);
       });
-      fetch('/api/Board', {
-        method: 'POST',
-        body: formData
-      }).then(function (res) {
-        if (res) console.log(res);
-      });
+      this.props.submit(formData);
     }
   }, {
     key: "render",

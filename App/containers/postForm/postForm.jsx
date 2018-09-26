@@ -47,10 +47,7 @@ export default class PostForm extends React.Component {
         formData.append('boardId', this.props.boardId);
         this.state.images.forEach(image => formData.append('images', image));
 
-        fetch('/api/Board', {
-            method: 'POST',
-            body: formData
-        }).then(res => {if (res) console.log(res)});
+        this.props.submit(formData);
     }
 
     render() {

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Post from '../post/post.jsx'
+import PostForm from '../postForm/postForm.jsx'
 
 export default class OpenThread extends React.Component {
     constructor(params) {
@@ -14,6 +15,7 @@ export default class OpenThread extends React.Component {
         this.fetchOp = this.fetchOp.bind(this);
         this.fetchPosts = this.fetchPosts.bind(this);
         this.mapPosts = this.mapPosts.bind(this);
+        this.submitPost = this.submitPost.bind(this);
     }
 
     componentDidMount() {
@@ -47,6 +49,14 @@ export default class OpenThread extends React.Component {
         );
     }
 
+    submitPost(formData) {
+        formData.append('parentId', this.threadId);
+        fetch('/api/Posts', {
+            method: 'POST',
+            body: formData
+        });
+    }
+
     render() {
         const id = this.threadId
         console.log(id);
@@ -62,6 +72,7 @@ export default class OpenThread extends React.Component {
             <div>
                 {op}
                 {posts}
+                <PostForm submit={this.submitPost} boardId={this.props.boardId} />
             </div>
         );
     }

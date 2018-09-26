@@ -33,7 +33,7 @@ namespace Tsukaba.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] TopicTransfer fetchedTopic)
+        public async Task<ActionResult> Post([FromForm] PostTransfer fetchedTopic)
         {
             using (var db = new ApplicationDbContext())
             {

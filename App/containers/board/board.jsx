@@ -13,6 +13,7 @@ export default class Board extends React.Component {
         }
 
         this.allThreads = this.allThreads.bind(this);
+        this.submitThread = this.submitThread.bind(this);
     }
 
     componentDidMount() {
@@ -24,7 +25,7 @@ export default class Board extends React.Component {
     allThreads() {
         return (
             <div>
-                <PostForm boardId={this.props.boardId} />
+                <PostForm submit={this.submitThread} boardId={this.props.boardId} />
                 {this.state.threadList.map(thread =>
                     <Post
                         key={thread.lastTimeBumped}
@@ -34,7 +35,19 @@ export default class Board extends React.Component {
                 )}
             </div>
         );
-    }    
+    }
+
+    submitThread(formData) {
+        if (!formData.get('images')) {
+            alert('Can\'t create a thread without at least one image.');
+            return;
+        }
+
+        fetch('/api/Board', {
+            method: 'POST',
+            body: formData
+        });
+    }
 
     render() {
         let boardContent;

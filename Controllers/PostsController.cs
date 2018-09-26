@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +42,50 @@ namespace Tsukaba.Controllers
 
             return Json(posts);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Post([FromForm] PostTransfer fetchedPost)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                var post = new Post
+                {
+                    Id = (db.Posts.Count() + 1),
+                    NumberOnBoard = (db.Posts.Where(p =>
+                        p.BoardId == fetchedPost.BoardId).Count() + 1),
+                    Title = fetchedPost.Title,
+                    Message = fetchedPost.Message,
+                    BoardId = fetchedPost.BoardId,
+                    ParentId = fetchedPost.ParentId,
+                    Time = DateTime.Now,
+                    LastTimeBumped = DateTime.Now
+                };
+                await db.Posts.AddAsync(post);
+
+                if (fetchedPost.Images != null)
+                {
+                    foreach (var image in fetchedPost.Images)
+                    {
+                        var timestamp = (int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                        var path = "/Files/" + timestamp
+                            + image.FileName.Substring(image.FileName.LastIndexOf('.'));
+                        // сохраняем файл в папку Files в каталоге wwwroot
+                        using (var fileStream = new FileStream(Directory.GetCurrentDirectory() + path, FileMode.Create))
+                        {
+                            await image.CopyToAsync(fileStream);
+                        }
+                        await db.Images.AddAsync(new Image {
+                            Id = (db.Images.Count() + 1),
+                            ImageUrl = path,
+                            PostId = post.Id
+                        });
+                    }
+                }
+
+                await db.SaveChangesAsync();
+            }
+            return Ok("Parent" + fetchedPost.ParentId);
+        }
+
     }
 }
