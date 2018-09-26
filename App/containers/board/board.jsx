@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom'
-import Thread from '../thread/thread.jsx';
+import Post from '../post/post.jsx';
 import PostForm from '../postForm/postForm.jsx';
 
 export default class Board extends React.Component {
@@ -17,7 +17,7 @@ export default class Board extends React.Component {
     }
 
     componentDidMount() {
-        fetch(`/api/Board/1`)
+        fetch(`/api/Board/${this.props.boardId}`)
             .then(res => res.json())
             .then(threads => this.setState({ threadList: threads }));
     }
@@ -27,9 +27,9 @@ export default class Board extends React.Component {
             <div>
                 <PostForm boardId={this.props.boardId} />
                 {this.state.threadList.map(thread =>
-                    <Thread
+                    <Post
                         key={thread.lastTimeBumped}
-                        thread={thread}
+                        post={thread}
                         only={false}
                     />
                 )}
@@ -40,7 +40,7 @@ export default class Board extends React.Component {
     OpenThread(id) {
         console.log(id);
         return (
-            <Thread only={true} thread={this.state.threadList.find(t => t.numberOnBoard == +id)} />
+            <Post only={true} post={this.state.threadList.find(t => t.numberOnBoard == +id)} />
         );
     }
 

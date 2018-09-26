@@ -10,8 +10,8 @@ export default class Picture extends React.Component {
     }
 
     componentDidMount() {
-        const thread = this.props.thread;
-        fetch(`/api/Images/${thread.boardId}/${thread.numberOnBoard}`)
+        const post = this.props.post;
+        fetch(`/api/Images/${post.boardId}/${post.numberOnBoard}`)
             .then(res => res.json())
             .then(images => this.setState({ images }));
     }

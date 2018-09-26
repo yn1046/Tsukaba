@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom'
 import { NavLink } from 'react-router-dom'
 import Picture from '../picture/picture.jsx'
 
-// TODO: remake into single thread, fetch and map in board.jsx
-export default class Thread extends React.Component {
+export default class Post extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,27 +12,27 @@ export default class Thread extends React.Component {
     }
 
     getTimeString() {
-        const date = new Date(this.props.thread.time);
+        const date = new Date(this.props.post.time);
         const isoDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
         const timeString = isoDate.toISOString().split(/T|Z|\./).slice(0, 2).join(' ');
         return timeString;
     }
 
     render() {
-        const thread = this.props.thread;
+        const post = this.props.post;
         
         let open;
-        if (!this.props.only) open = <NavLink to={`/b/${thread.numberOnBoard}`}>[Open]</NavLink>;
+        if (!this.props.only) open = <NavLink to={`/b/${post.numberOnBoard}`}>[Open]</NavLink>;
         else open = false;
 
         return (
             <div>
-                <h1>{thread.title}</h1>
-                <h3>№{thread.numberOnBoard}</h3>
+                <h1>{post.title}</h1>
+                <h3>№{post.numberOnBoard}</h3>
                 {open}
                 <p style={{ fontWeight: 'bold', fontStyle: 'italic' }}>{this.getTimeString()}</p>
-                <pre>{thread.message}</pre>
-                <Picture thread={thread} />
+                <pre>{post.message}</pre>
+                <Picture post={post} />
                 <hr />
             </div>
         );
